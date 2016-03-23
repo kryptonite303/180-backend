@@ -55,8 +55,11 @@ app.all('*', function(req, res, next) {
     }
 });
 
-app.use('/users/', users);
+app.get('/', function(req, res) {
+    res.send("It works!!");
+});
 
+app.use('/users/', users);
 app.listen(3000, function() {
 	console.log('listening on 3000');
 })
