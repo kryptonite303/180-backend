@@ -15,6 +15,7 @@
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "jquery": "^2.2.2",
+    "mailchimp": "^1.1.4",
     "mongoskin": "^2.0.3",
     "passport": "^0.3.2"
   }

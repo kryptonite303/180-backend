@@ -32,34 +32,42 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 
-app.all('*', function(req, res, next) {
-    var hostIndex = allowedHosts.indexOf(req.get('origin'));
+// app.all('*', function(req, res, next) {
+//     var hostIndex = allowedHosts.indexOf(req.get('origin'));
 
-    res.header('Access-Control-Allow-Origin', allowedHosts[hostIndex]);
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization, Accept-Encoding');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods','GET, POST, DELETE, OPTIONS');
+//     // res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+//     // res.header('Access-Control-Allow-Headers', '*');
+//     // res.header('Access-Control-Allow-Credentials', true);
+//     // res.header('Access-Control-Allow-Methods','GET, POST, DELETE, OPTIONS');
 
-    req.user = {
-    	name: "john"
-    }
+//     req.user = {
+//     	name: "john"
+//     }
 
-    if( req.user || publicPaths.indexOf(req.path) != -1){
-        next();
-    }else if(req.method === "OPTIONS"){
-        return res.send(200);
-    }else{
-         var err = new Error('Unauthorized Access');
-         err.status = 401;
-         next(err);
-    }
-});
+//     if( req.user || publicPaths.indexOf(req.path) != -1){
+//         next();
+//     }else if(req.method === "OPTIONS"){
+//         return res.send(200);
+//     }else{
+//          var err = new Error('Unauthorized Access');
+//          err.status = 401;
+//          next(err);
+//     }
+// });
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+    next();
+})
+app.use('/users/', users);
 
 app.get('/', function(req, res) {
-    res.send("It works!!");
+    res.send("We did it!");
 });
 
-app.use('/users/', users);
+
 app.listen(3000, function() {
 	console.log('listening on 3000');
 })

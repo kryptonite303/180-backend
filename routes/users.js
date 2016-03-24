@@ -11,10 +11,6 @@ router.use(function(req, res, next){
 router.get('/', function(req, res) {
 	var user = req.instance.user;
 	res.send(user);
-	// console.log(user);
-	// user.getUser(req.query, function(response){
-	// 	res.send(response);
-	// });
 });
 
 router.post('/add/', function(req, res) {

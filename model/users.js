@@ -40,6 +40,7 @@ function User(user) {
 		        "email": params.email
     		}
 		}
+		console.log(param);
 		mc.lists_subscribe(param, function (err, result) {
 			if (err) {
 				return callback(err);
