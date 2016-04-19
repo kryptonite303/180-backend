@@ -10,3 +10,6 @@ config.mongodb = {
 		safe: true
 	}
 };
+config.mailchimp = {
+	list: "dd5ddbaf5f"
+}

@@ -5,6 +5,7 @@ var db = mongo.db(config.mongodb.db180, config.mongodb.settings);
 var MailChimpAPI = require('mailchimp').MailChimpAPI;
 var apiKey = keys.mailChimp;
 var mc = new MailChimpAPI(apiKey, { version : '2.0' });
+var async = require('async');
 db.bind('users');
 
 function User(user) {
@@ -35,17 +36,42 @@ function User(user) {
 
 	this.addToMailingList = function(params, callback) {
 		var param = {
-			id: 'dd5ddbaf5f',
+			id: config.mailchimp.list,
 			email: {
 		        "email": params.email
     		}
 		}
-		console.log(param);
-		mc.lists_subscribe(param, function (err, result) {
-			if (err) {
-				return callback(err);
-			}
-			return callback(null, result);
+		async.auto({
+		    mcAdd: function (callback) {
+				mc.lists_subscribe(param, function (err, result) {
+					if (err) {
+						return callback(err);
+					}
+					return callback(null, result);
+				});
+		    },
+		    dbAdd: [
+		        "mcAdd",
+		        function (result, callback) {
+		        	var insert = {
+		        		_id: params.email,
+		        		firstname: params.firstname,
+		        		lastname: params.lastname
+		        	}
+		        	db.users.insert(insert, function (err, res) {
+						if (err) {
+							return callback(err);
+						}
+						return callback(null, res);
+					});
+		        }
+		    ]
+		},
+		function (err, result) {
+		    if (err) {
+		    	return callback(err);
+		    }
+		    return callback(null, "User added to mailing list");
 		});
 	}
 
