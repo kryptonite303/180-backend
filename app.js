@@ -7,6 +7,7 @@ var users = require('./routes/users');
 var app = express();
 var cookieParser 	= require('cookie-parser');
 var bodyParser 		= require('body-parser');
+var io = require('socket.io')(app);
 
 var allowedHosts = [
     'http://localhost:3000',
@@ -67,6 +68,11 @@ app.get('/', function(req, res) {
     res.send("We did it!");
 });
 
+io.on('connection', function (socket) {
+    socket.on('chat', function (msg) {
+        io.emit('chat', msg);
+    })
+})
 
 app.listen(3000, function() {
 	console.log('listening on 3000');
